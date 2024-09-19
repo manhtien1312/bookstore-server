@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.Optional;
 
-public interface AccountService {
+public interface IAccountService {
     Optional<Account> findByEmail(String email);
 
     boolean existsByEmail(String email);

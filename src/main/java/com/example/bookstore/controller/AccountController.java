@@ -1,10 +1,9 @@
 package com.example.bookstore.controller;
 
 import com.example.bookstore.payload.response.MessageResponse;
-import com.example.bookstore.service.serviceinterface.AccountService;
+import com.example.bookstore.service.serviceinterface.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 public class AccountController {
 
     @Autowired
-    private AccountService accountService;
+    private IAccountService accountService;
 
     @PutMapping("/change-password")
     public ResponseEntity<MessageResponse> changePassword(@RequestParam String newPassword){

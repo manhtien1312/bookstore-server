@@ -9,9 +9,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface AccountRepository extends JpaRepository<Account, Integer> {
+public interface AccountRepository extends JpaRepository<Account, UUID> {
 
     @EntityGraph(attributePaths = "roles")
     Optional<Account> findByEmail(String email);
@@ -21,6 +22,6 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
     @Modifying
     @Transactional
     @Query(value = "UPDATE Account acc SET acc.password=:newPassword WHERE acc.user.id=:userId")
-    void updatePasswordByUserId(String newPassword, int userId);
+    void updatePasswordByUserId(String newPassword, UUID userId);
 
 }

@@ -7,17 +7,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Product {
+public class Book {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue
+    private UUID id;
 
     private String title;
     private String author;
@@ -25,8 +26,8 @@ public class Product {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    private int inventory;
     private int price;
-    private int type;
 
     @Lob
     @Column(
@@ -37,8 +38,8 @@ public class Product {
 
     @ManyToMany
     @JoinTable(
-            name = "product_category",
-            joinColumns = @JoinColumn(name = "productId"),
+            name = "book_category",
+            joinColumns = @JoinColumn(name = "bookId"),
             inverseJoinColumns = @JoinColumn(name = "categoryId")
     )
     private List<Category> categories;

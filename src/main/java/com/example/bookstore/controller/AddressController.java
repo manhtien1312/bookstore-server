@@ -2,7 +2,7 @@ package com.example.bookstore.controller;
 
 import com.example.bookstore.model.Address;
 import com.example.bookstore.payload.response.MessageResponse;
-import com.example.bookstore.service.serviceinterface.AddressService;
+import com.example.bookstore.service.serviceinterface.IAddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.*;
 public class AddressController {
 
     @Autowired
-    private AddressService addressService;
+    private IAddressService addressService;
 
-    @GetMapping("/")
+    @GetMapping
     public Address getUserAddress(){
         return addressService.getUserAddress();
     }

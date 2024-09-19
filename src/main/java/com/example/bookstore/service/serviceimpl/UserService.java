@@ -1,13 +1,11 @@
 package com.example.bookstore.service.serviceimpl;
 
-import com.example.bookstore.dto.UserDTO;
-import com.example.bookstore.dto.mapper.UserDTOMapper;
+import com.example.bookstore.dto.UserDto;
+import com.example.bookstore.dto.mapper.UserDtoMapper;
 import com.example.bookstore.model.User;
 import com.example.bookstore.payload.response.MessageResponse;
 import com.example.bookstore.repository.UserRepository;
-import com.example.bookstore.service.serviceinterface.UserService;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import com.example.bookstore.service.serviceinterface.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,33 +15,30 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserService implements IUserService {
 
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private UserDTOMapper userDTOMapper;
+    private UserDtoMapper userDTOMapper;
 
-    private UserDTO getInfoFromRequest(){
+    private UserDto getInfoFromRequest(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         return findByAccountEmail(userDetails.getUsername());
     }
 
     @Override
-    public UserDTO findByAccountEmail(String accountEmail) {
+    public UserDto findByAccountEmail(String accountEmail) {
         return userRepository.findByAccountEmail(accountEmail)
                 .map(userDTOMapper)
                 .orElseThrow();
     }
 
     @Override
-    public UserDTO getUserInfor() {
+    public UserDto getUserInfor() {
         return getInfoFromRequest();
     }
 
@@ -53,12 +48,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<MessageResponse> updateUser(UserDTO userDTO) {
+    public ResponseEntity<MessageResponse> updateUser(UserDto userDTO) {
         try {
             User user = userRepository.findById(getInfoFromRequest().id()).orElseThrow();
-            user.setName(userDTO.name());
-            user.setPhoneNumber(userDTO.phoneNumber());
-            user.setGender(userDTO.gender());
+            if (userDTO.name() != null && !userDTO.name().isEmpty()){
+                user.setName(userDTO.name());
+            }
+            if (userDTO.phoneNumber() != null && !userDTO.phoneNumber().isEmpty()){
+                user.setPhoneNumber(userDTO.phoneNumber());
+            }
+            if (userDTO.gender() != null && !userDTO.gender().isEmpty()){
+                user.setGender(userDTO.gender());
+            }
             userRepository.save(user);
             return ResponseEntity.ok(new MessageResponse("Cập Nhật Thông Tin Thành Công!"));
         } catch (Exception e){

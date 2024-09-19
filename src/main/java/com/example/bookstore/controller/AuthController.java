@@ -3,10 +3,8 @@ package com.example.bookstore.controller;
 import com.example.bookstore.payload.request.SignInRequest;
 import com.example.bookstore.payload.request.SignUpRequest;
 import com.example.bookstore.payload.response.MessageResponse;
-import com.example.bookstore.service.serviceinterface.AccountService;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.example.bookstore.service.serviceinterface.IAccountService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +17,10 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     @Autowired
-    private AccountService accountService;
+    private IAccountService accountService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> signUp(@RequestBody SignUpRequest request) throws Exception{
+    public ResponseEntity<?> signUp(@Valid @RequestBody SignUpRequest request) throws Exception{
         return accountService.register(request);
     }
 

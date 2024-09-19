@@ -5,6 +5,6 @@ import com.example.bookstore.model.Role;
 
 import java.util.Optional;
 
-public interface RoleService {
+public interface IRoleService {
     Optional<Role> findByRoleName(ERole roleName);
 }

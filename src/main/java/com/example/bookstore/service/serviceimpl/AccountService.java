@@ -7,22 +7,17 @@ import com.example.bookstore.payload.response.JwtResponse;
 import com.example.bookstore.payload.response.MessageResponse;
 import com.example.bookstore.repository.AccountRepository;
 import com.example.bookstore.security.JwtService;
-import com.example.bookstore.service.serviceinterface.AccountService;
-import com.example.bookstore.service.serviceinterface.RoleService;
-import com.example.bookstore.service.serviceinterface.UserService;
-import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import com.example.bookstore.service.serviceinterface.IAccountService;
+import com.example.bookstore.service.serviceinterface.IRoleService;
+import com.example.bookstore.service.serviceinterface.IUserService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -37,14 +32,14 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-public class AccountServiceImpl implements AccountService {
+public class AccountService implements IAccountService {
 
     @Autowired
     private AccountRepository accountRepository;
     @Autowired
-    private RoleService roleService;
+    private IRoleService roleService;
     @Autowired
-    private UserService userService;
+    private IUserService userService;
     @Autowired
     private JwtService jwtService;
     @Autowired
@@ -114,12 +109,11 @@ public class AccountServiceImpl implements AccountService {
                 .phoneNumber(request.phoneNumber())
                 .account(account)
                 .address(new Address())
-
                 .avatarImage(readImage(imgUrl))
                 .build();
 
         userService.saveUser(user);
-        return ResponseEntity.ok(new MessageResponse(("Đăng Ký Thành Công!")));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse(("Đăng Ký Thành Công!")));
     }
 
     @Override

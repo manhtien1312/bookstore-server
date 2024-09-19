@@ -1,7 +1,9 @@
 package com.example.bookstore.dto;
 
-public record UserDTO(
-        Integer id,
+import java.util.UUID;
+
+public record UserDto(
+        UUID id,
         String name,
         String phoneNumber,
         String gender,

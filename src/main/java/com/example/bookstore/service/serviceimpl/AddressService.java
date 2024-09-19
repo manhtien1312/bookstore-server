@@ -1,11 +1,11 @@
 package com.example.bookstore.service.serviceimpl;
 
-import com.example.bookstore.dto.UserDTO;
+import com.example.bookstore.dto.UserDto;
 import com.example.bookstore.model.Address;
 import com.example.bookstore.payload.response.MessageResponse;
 import com.example.bookstore.repository.AddressRepository;
-import com.example.bookstore.service.serviceinterface.AddressService;
-import com.example.bookstore.service.serviceinterface.UserService;
+import com.example.bookstore.service.serviceinterface.IAddressService;
+import com.example.bookstore.service.serviceinterface.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -14,14 +14,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AddressServiceImpl implements AddressService {
+public class AddressService implements IAddressService {
 
     @Autowired
     private AddressRepository addressRepository;
     @Autowired
-    private UserService userService;
+    private IUserService userService;
 
-    private UserDTO getUserInfoFromRequest(){
+    private UserDto getUserInfoFromRequest(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         return userService.findByAccountEmail(userDetails.getUsername());
@@ -38,7 +38,7 @@ public class AddressServiceImpl implements AddressService {
             String city = address.getCity();
             String district = address.getDistrict();
             String town = address.getTown();
-            String detailAddr = address.getDetailAddr();
+            String detailAddr = address.getDetailAddress();
             addressRepository.updateAddressByUserid(city, district, town, detailAddr, getUserInfoFromRequest().id());
             return ResponseEntity.ok(new MessageResponse("Cập Nhật Địa Chỉ Thành Công!"));
         } catch (Exception e){

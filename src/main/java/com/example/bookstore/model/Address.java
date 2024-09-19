@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.UUID;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -12,13 +14,13 @@ import lombok.*;
 public class Address {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue
+    private UUID id;
 
     private String city;
     private String district;
     private String town;
-    private String detailAddr;
+    private String detailAddress;
 
     @OneToOne(
             mappedBy = "address"
@@ -28,7 +30,7 @@ public class Address {
 
     @Override
     public String toString(){
-        return detailAddr + " " + town + " " + district + " " + city;
+        return detailAddress + " " + town + " " + district + " " + city;
     }
 
 }

@@ -1,6 +1,9 @@
 package com.example.bookstore.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,21 +16,13 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "rates")
-public class Rate {
+@Table(name = "test_model")
+public class TestModel {
 
     @Id
     @GeneratedValue
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Book book;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    private int stars;
+    private String name;
 
 }
