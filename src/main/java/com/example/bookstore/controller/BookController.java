@@ -26,6 +26,16 @@ public class BookController {
         return bookService.getAllBook();
     }
 
+    @GetMapping("/filter")
+    public ResponseEntity<?> filterBooks(@RequestParam String category){
+        return bookService.filterBooks(category);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchBooks(@RequestParam String searchText){
+        return bookService.searchBooks(searchText);
+    }
+
     @PostMapping
     public ResponseEntity<MessageResponse> addBook(@RequestParam String bookDtoStr, @RequestParam MultipartFile image) {
         return bookService.insertBook(bookDtoStr, image);

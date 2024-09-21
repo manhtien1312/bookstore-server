@@ -11,6 +11,8 @@ import java.util.UUID;
 public interface IBookService {
 
     ResponseEntity<?> getAllBook();
+    ResponseEntity<?> filterBooks(String category);
+    ResponseEntity<?> searchBooks(String searchText);
     ResponseEntity<MessageResponse> insertBook(String bookDtoStr, MultipartFile image);
     ResponseEntity<MessageResponse> insertThroughFile(MultipartFile booksFile) throws IOException;
     ResponseEntity<MessageResponse> deleteBook(String id);

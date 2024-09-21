@@ -48,6 +48,40 @@ public class BookService implements IBookService {
             List<BookDto> res = books.stream()
                     .map(bookDtoMapper)
                     .collect(Collectors.toList());
+            return ResponseEntity.status(HttpStatus.OK).body(res.subList(0, 11));
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageResponse("Lỗi Server. Vui lòng thử lại sau!"));
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> filterBooks(String category) {
+        try {
+            List<Book> books = bookRepository.findByCategory(category);
+            if (books.size() == 0) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            }
+            List<BookDto> res = books.stream()
+                    .map(bookDtoMapper)
+                    .collect(Collectors.toList());
+            return ResponseEntity.status(HttpStatus.OK).body(res.size());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageResponse("Lỗi Server. Vui lòng thử lại sau!"));
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> searchBooks(String searchText) {
+        try {
+            List<Book> books = bookRepository.search(searchText);
+            if (books.size() == 0) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            }
+            List<BookDto> res = books.stream()
+                    .map(bookDtoMapper)
+                    .collect(Collectors.toList());
             return ResponseEntity.status(HttpStatus.OK).body(res);
         } catch (Exception e){
             e.printStackTrace();

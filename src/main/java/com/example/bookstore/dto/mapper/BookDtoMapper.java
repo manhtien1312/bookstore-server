@@ -24,8 +24,7 @@ public class BookDtoMapper implements Function<Book, BookDto> {
                 book.getDescription(),
                 book.getPrice(),
                 book.getInventory(),
-                categories,
-                book.getImage()
+                categories
         );
     }
 }
