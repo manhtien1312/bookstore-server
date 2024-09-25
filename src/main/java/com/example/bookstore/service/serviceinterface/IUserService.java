@@ -6,8 +6,10 @@ import com.example.bookstore.payload.response.MessageResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Optional;
+
 public interface IUserService {
-    UserDto findByAccountEmail(String accountEmail);
+    Optional<User> findByAccountEmail(String accountEmail);
 
     UserDto getUserInfor();
 

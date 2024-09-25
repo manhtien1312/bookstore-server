@@ -22,7 +22,6 @@ public class Category {
     @GeneratedValue
     private UUID id;
 
-    @NotNull(message = "Tên thể loại không được để trống!")
     @NotBlank(message = "Tên thể loại không được để trống!")
     private String categoryName;
 

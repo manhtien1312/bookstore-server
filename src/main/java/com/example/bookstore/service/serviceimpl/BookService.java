@@ -42,7 +42,7 @@ public class BookService implements IBookService {
     public ResponseEntity<?> getAllBook() {
         try {
             List<Book> books = bookRepository.findAll();
-            if (books.size() == 0) {
+            if (books.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
             }
             List<BookDto> res = books.stream()
@@ -59,12 +59,12 @@ public class BookService implements IBookService {
     public ResponseEntity<?> filterBooks(String category) {
         try {
             List<Book> books = bookRepository.findByCategory(category);
-            if (books.size() == 0) {
+            if (books.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
             }
             List<BookDto> res = books.stream()
                     .map(bookDtoMapper)
-                    .collect(Collectors.toList());
+                    .toList();
             return ResponseEntity.status(HttpStatus.OK).body(res.size());
         } catch (Exception e){
             e.printStackTrace();
@@ -76,7 +76,7 @@ public class BookService implements IBookService {
     public ResponseEntity<?> searchBooks(String searchText) {
         try {
             List<Book> books = bookRepository.search(searchText);
-            if (books.size() == 0) {
+            if (books.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
             }
             List<BookDto> res = books.stream()

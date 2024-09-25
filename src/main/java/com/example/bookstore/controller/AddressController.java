@@ -16,8 +16,13 @@ public class AddressController {
     private IAddressService addressService;
 
     @GetMapping
-    public Address getUserAddress(){
+    public ResponseEntity<?> getUserAddress(){
         return addressService.getUserAddress();
+    }
+
+    @PostMapping
+    public ResponseEntity<MessageResponse> addAddress(@RequestBody Address address){
+        return addressService.addAddress(address);
     }
 
     @PutMapping("update-address")

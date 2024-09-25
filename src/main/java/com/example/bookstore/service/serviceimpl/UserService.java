@@ -15,6 +15,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserService implements IUserService {
@@ -24,22 +26,21 @@ public class UserService implements IUserService {
     @Autowired
     private UserDtoMapper userDTOMapper;
 
-    private UserDto getInfoFromRequest(){
+    private User getInfoFromRequest(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return findByAccountEmail(userDetails.getUsername());
+        return findByAccountEmail(userDetails.getUsername()).orElseThrow();
     }
 
     @Override
-    public UserDto findByAccountEmail(String accountEmail) {
-        return userRepository.findByAccountEmail(accountEmail)
-                .map(userDTOMapper)
-                .orElseThrow();
+    public Optional<User> findByAccountEmail(String accountEmail) {
+        return userRepository.findByAccountEmail(accountEmail);
+
     }
 
     @Override
     public UserDto getUserInfor() {
-        return getInfoFromRequest();
+        return userDTOMapper.apply(getInfoFromRequest());
     }
 
     @Override
@@ -50,7 +51,7 @@ public class UserService implements IUserService {
     @Override
     public ResponseEntity<MessageResponse> updateUser(UserDto userDTO) {
         try {
-            User user = userRepository.findById(getInfoFromRequest().id()).orElseThrow();
+            User user = userRepository.findById(getInfoFromRequest().getId()).orElseThrow();
             if (userDTO.name() != null && !userDTO.name().isEmpty()){
                 user.setName(userDTO.name());
             }
@@ -71,7 +72,7 @@ public class UserService implements IUserService {
     @Override
     public ResponseEntity<MessageResponse> updateAvatarImage(MultipartFile avatarImage) {
         try {
-            User user = userRepository.findById(getInfoFromRequest().id()).orElseThrow();
+            User user = userRepository.findById(getInfoFromRequest().getId()).orElseThrow();
             user.setAvatarImage(avatarImage.getBytes());
             userRepository.save(user);
             return ResponseEntity.ok(new MessageResponse("Cập Nhật Ảnh Đại Diện Thành Công!"));

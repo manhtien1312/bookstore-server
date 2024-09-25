@@ -11,6 +11,7 @@ import com.example.bookstore.service.serviceinterface.IAccountService;
 import com.example.bookstore.service.serviceinterface.IRoleService;
 import com.example.bookstore.service.serviceinterface.IUserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.math3.analysis.function.Add;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -108,7 +109,6 @@ public class AccountService implements IAccountService {
                 .gender(request.gender())
                 .phoneNumber(request.phoneNumber())
                 .account(account)
-                .address(new Address())
                 .avatarImage(readImage(imgUrl))
                 .build();
 
