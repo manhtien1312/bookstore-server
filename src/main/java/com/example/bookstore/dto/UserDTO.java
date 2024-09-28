@@ -10,6 +10,7 @@ public record UserDto(
         String name,
         String phoneNumber,
         String gender,
+        String email,
         List<Address> address,
         byte[] avatarImage
 ) {

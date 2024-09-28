@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AddressService implements IAddressService {
@@ -48,14 +49,13 @@ public class AddressService implements IAddressService {
     @Override
     public ResponseEntity<MessageResponse> updateAddress(Address address) {
         try {
-            String name = address.getName();
-            String phoneNumber = address.getPhoneNumber();
-            String city = address.getCity();
-            String district = address.getDistrict();
-            String town = address.getWard();
-            String detailAddress = address.getDetailAddress();
-            int isDefault = address.getIsDefault();
-            addressRepository.updateAddressByUserid(name, phoneNumber, city, district, town, detailAddress, isDefault, getUserInfoFromRequest().getId());
+            if(address.getIsDefault() == 1){
+                Address defaultAddress = addressRepository.findDefaultByUserId(getUserInfoFromRequest().getId()).orElseThrow();
+                defaultAddress.setIsDefault(0);
+                addressRepository.save(defaultAddress);
+            }
+            address.setUser(getUserInfoFromRequest());
+            addressRepository.save(address);
             return ResponseEntity.ok(new MessageResponse("Cập Nhật Địa Chỉ Thành Công!"));
         } catch (Exception e){
             e.printStackTrace();
@@ -67,8 +67,19 @@ public class AddressService implements IAddressService {
     public ResponseEntity<MessageResponse> addAddress(Address address) {
         try {
             address.setUser(getUserInfoFromRequest());
+
+            if(address.getIsDefault() == 0){
+                addressRepository.save(address);
+                return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse("Thêm Địa Chỉ Thành Công!"));
+            }
+
+            Optional<Address> defaultAddress = addressRepository.findDefaultByUserId(getUserInfoFromRequest().getId());
+            if(defaultAddress.isPresent()){
+                defaultAddress.get().setIsDefault(0);
+                addressRepository.save(defaultAddress.get());
+            }
             addressRepository.save(address);
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+            return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse("Thêm Địa Chỉ Thành Công!"));
         } catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageResponse("Lỗi Server. Vui lòng thử lại sau!"));
