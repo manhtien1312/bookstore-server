@@ -15,11 +15,13 @@ import java.util.UUID;
 public interface AddressRepository extends JpaRepository<Address, UUID> {
 
     @Transactional
-    @Query(value = "SELECT a FROM Address a WHERE a.user.id=:userId")
+    @Query(value = "SELECT a FROM Address a " +
+            "WHERE a.user.id=:userId")
     List<Address> findByUserId(UUID userId);
 
     @Transactional
-    @Query(value = "SELECT a FROM Address a WHERE a.user.id=:userId AND a.isDefault=1")
+    @Query(value = "SELECT a FROM Address a " +
+            "WHERE a.user.id=:userId AND a.isDefault=1")
     Optional<Address> findDefaultByUserId(UUID userId);
 
 }

@@ -25,9 +25,14 @@ public class AddressController {
         return addressService.addAddress(address);
     }
 
-    @PutMapping("update-address")
+    @PutMapping("/update-address")
     public ResponseEntity<MessageResponse> updateAddress(@RequestBody Address address){
         return addressService.updateAddress(address);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<MessageResponse> deleteAddress(@PathVariable String id){
+        return addressService.deleteAddress(id);
     }
 
 }

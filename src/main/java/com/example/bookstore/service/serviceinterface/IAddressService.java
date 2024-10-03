@@ -11,5 +11,6 @@ public interface IAddressService {
     ResponseEntity<?> getUserAddress();
     ResponseEntity<MessageResponse> updateAddress(Address address);
     ResponseEntity<MessageResponse> addAddress(Address address);
+    ResponseEntity<MessageResponse> deleteAddress(String id);
 
 }

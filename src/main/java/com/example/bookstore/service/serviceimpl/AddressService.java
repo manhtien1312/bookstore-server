@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class AddressService implements IAddressService {
@@ -80,6 +81,17 @@ public class AddressService implements IAddressService {
             }
             addressRepository.save(address);
             return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse("Thêm Địa Chỉ Thành Công!"));
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageResponse("Lỗi Server. Vui lòng thử lại sau!"));
+        }
+    }
+
+    @Override
+    public ResponseEntity<MessageResponse> deleteAddress(String id) {
+        try {
+            addressRepository.deleteById(UUID.fromString(id));
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse("Bạn Đã Xóa Địa Chỉ!"));
         } catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageResponse("Lỗi Server. Vui lòng thử lại sau!"));

@@ -52,13 +52,13 @@ public class UserService implements IUserService {
     public ResponseEntity<MessageResponse> updateUser(UserDto userDTO) {
         try {
             User user = userRepository.findById(getInfoFromRequest().getId()).orElseThrow();
-            if (userDTO.name() != null && !userDTO.name().isEmpty()){
+            if (!userDTO.name().isBlank()){
                 user.setName(userDTO.name());
             }
-            if (userDTO.phoneNumber() != null && !userDTO.phoneNumber().isEmpty()){
+            if (!userDTO.phoneNumber().isBlank()){
                 user.setPhoneNumber(userDTO.phoneNumber());
             }
-            if (userDTO.gender() != null && !userDTO.gender().isEmpty()){
+            if (!userDTO.gender().isBlank()){
                 user.setGender(userDTO.gender());
             }
             userRepository.save(user);
