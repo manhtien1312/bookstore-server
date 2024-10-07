@@ -17,9 +17,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cloudinary.*;
+import com.cloudinary.utils.ObjectUtils;
+import io.github.cdimascio.dotenv.Dotenv;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -37,6 +42,8 @@ public class BookService implements IBookService {
 
     @Autowired
     private ObjectMapper objectMapper;
+    private final Dotenv dotenv = Dotenv.load();
+    private final Cloudinary cloudinary = new Cloudinary(dotenv.get("CLOUDINARY_URL"));
 
     @Override
     public ResponseEntity<?> getAllBook() {
@@ -48,7 +55,7 @@ public class BookService implements IBookService {
             List<BookDto> res = books.stream()
                     .map(bookDtoMapper)
                     .collect(Collectors.toList());
-            return ResponseEntity.status(HttpStatus.OK).body(res.subList(0, 11));
+            return ResponseEntity.status(HttpStatus.OK).body(res);
         } catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageResponse("Lỗi Server. Vui lòng thử lại sau!"));
@@ -109,16 +116,24 @@ public class BookService implements IBookService {
                     .filter(category -> bookDto.categories().contains(category.getCategoryName()))
                     .toList();
 
-            var product = Book.builder()
+            Map params1 = ObjectUtils.asMap(
+                    "folder", "book_cover",
+                    "public_id", bookDto.title()
+            );
+
+            Map res = cloudinary.uploader().upload(image.getBytes(), params1);
+            String imageUrl = (String) res.get("secure_url");
+
+            var book = Book.builder()
                     .title(bookDto.title())
                     .author(bookDto.author())
                     .description(bookDto.description())
                     .price(bookDto.price())
                     .inventory(bookDto.inventory())
-                    .image(image.getBytes())
+                    .imageUrl(imageUrl)
                     .categories(bookCategory)
                     .build();
-            bookRepository.save(product);
+            bookRepository.save(book);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -136,13 +151,21 @@ public class BookService implements IBookService {
             for (int i=1; i<sheet.getPhysicalNumberOfRows(); i++){
                 XSSFRow row = sheet.getRow(i);
 
+                Map params1 = ObjectUtils.asMap(
+                        "folder", "book_cover",
+                        "public_id", row.getCell(0).getStringCellValue()
+                );
+
+                Map res = cloudinary.uploader().upload(coverImages.get(i-1).getData(), params1);
+                String imageUrl = (String) res.get("secure_url");
+
                 var book = Book.builder()
                         .title(row.getCell(0).getStringCellValue())
                         .author(row.getCell(1).getStringCellValue())
                         .description(row.getCell(2).getStringCellValue())
                         .price((int) row.getCell(3).getNumericCellValue())
                         .inventory((int) row.getCell(4).getNumericCellValue())
-                        .image(coverImages.get(i-1).getData())
+                        .imageUrl(imageUrl)
                         .categories(
                                 categoryRepository.findAll().stream()
                                         .filter(category -> row.getCell(6).getStringCellValue().equals(category.getCategoryName()))

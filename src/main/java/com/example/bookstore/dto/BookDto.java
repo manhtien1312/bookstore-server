@@ -11,6 +11,6 @@ public record BookDto(
    Integer price,
    Integer inventory,
    List<String> categories,
-   byte[] image
+   String imageUrl
 ) {
 }

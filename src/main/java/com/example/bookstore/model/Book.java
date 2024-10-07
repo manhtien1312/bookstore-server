@@ -29,12 +29,8 @@ public class Book {
     private int inventory;
     private int price;
 
-    @Lob
-    @Column(
-            name = "image",
-            columnDefinition = "MEDIUMBLOB"
-    )
-    private byte[] image;
+    @Column(columnDefinition = "TEXT")
+    private String imageUrl;
 
     @ManyToMany
     @JoinTable(
